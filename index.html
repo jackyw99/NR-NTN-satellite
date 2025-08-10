@@ -3,118 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NR-NTN Satellite Tool</title>
+    <title>NR-NTN Satellite System Tool</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>NR-NTN Satellite Communication Tool</h1>
+            <h1>NR-NTN Satellite System Tool</h1>
+            <p class="subtitle">Non-Terrestrial Network Simulation Framework</p>
             <nav class="main-nav">
-                <button class="nav-btn active" data-page="dashboard">Dashboard</button>
-                <button class="nav-btn" data-page="satellite-config">Satellite Config</button>
-                <button class="nav-btn" data-page="network-analysis">Network Analysis</button>
-                <button class="nav-btn" data-page="monitoring">Monitoring</button>
+                <button class="nav-btn active" data-page="overview">System Overview</button>
+                <button class="nav-btn" data-page="satellite-config">Satellite Configuration</button>
+                <button class="nav-btn" data-page="trajectory">Trajectory Analysis</button>
+                <button class="nav-btn" data-page="coverage">Coverage Analysis</button>
+                <button class="nav-btn" data-page="performance">Performance Metrics</button>
+                <button class="nav-btn" data-page="detailed" data-url="pages/detailed-analysis.html">Detailed Analysis</button>
             </nav>
         </header>
 
         <main>
             <div class="parameter-panel">
-                <h3>Shared Parameters</h3>
-                <div class="param-group">
-                    <label for="satellite-id">Satellite ID:</label>
-                    <input type="text" id="satellite-id" name="satellite-id" placeholder="Enter satellite ID">
+                <h3>System Configuration</h3>
+                
+                <div class="param-section">
+                    <h4>Satellite Configuration</h4>
+                    <div class="param-group">
+                        <label for="num-satellites">Number of Satellites (1-4):</label>
+                        <select id="num-satellites" name="num-satellites">
+                            <option value="1">1 Satellite</option>
+                            <option value="2">2 Satellites</option>
+                            <option value="3">3 Satellites</option>
+                            <option value="4" selected>4 Satellites</option>
+                        </select>
+                    </div>
+                    <div class="param-group">
+                        <label for="altitude-model">Altitude Model:</label>
+                        <select id="altitude-model" name="altitude-model">
+                            <option value="LE350">LEO 350km</option>
+                            <option value="LE600" selected>LEO 600km</option>
+                            <option value="LEO1200">LEO 1200km</option>
+                            <option value="GEO">GEO 35,786km</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="param-group">
-                    <label for="frequency">Frequency (MHz):</label>
-                    <input type="number" id="frequency" name="frequency" placeholder="2000">
+
+                <div class="param-section">
+                    <h4>Trajectory Parameters</h4>
+                    <div class="param-group">
+                        <label for="start-elevation">Start Elevation (°):</label>
+                        <input type="range" id="start-elevation" name="start-elevation" min="20" max="160" value="30" step="1">
+                        <span class="range-value">30°</span>
+                    </div>
+                    <div class="param-group">
+                        <label for="max-elevation">Max Elevation (°):</label>
+                        <input type="range" id="max-elevation" name="max-elevation" min="20" max="160" value="90" step="1">
+                        <span class="range-value">90°</span>
+                    </div>
                 </div>
-                <div class="param-group">
-                    <label for="beam-id">Beam ID:</label>
-                    <input type="text" id="beam-id" name="beam-id" placeholder="Enter beam ID">
+
+                <div class="param-section">
+                    <h4>Ground Assets</h4>
+                    <div class="param-group">
+                        <label for="ground-station">Ground Station:</label>
+                        <input type="text" id="ground-station" name="ground-station" value="Northern Taiwan" readonly>
+                    </div>
+                    <div class="param-group">
+                        <label for="handheld-device">Handheld Device:</label>
+                        <input type="text" id="handheld-device" name="handheld-device" value="Northern Taiwan" readonly>
+                    </div>
                 </div>
-                <div class="param-group">
-                    <label for="location">Location:</label>
-                    <input type="text" id="location" name="location" placeholder="Lat, Lon">
+
+                <div class="param-section">
+                    <h4>Communication Parameters</h4>
+                    <div class="param-group">
+                        <label for="frequency">Frequency (MHz):</label>
+                        <input type="number" id="frequency" name="frequency" value="2100" min="1000" max="6000">
+                    </div>
+                    <div class="param-group">
+                        <label for="bandwidth">Bandwidth (MHz):</label>
+                        <input type="number" id="bandwidth" name="bandwidth" value="20" min="5" max="100">
+                    </div>
                 </div>
             </div>
 
             <div class="content-area">
-                <div id="dashboard" class="page-content active">
-                    <h2>Dashboard</h2>
-                    <div class="dashboard-grid">
-                        <div class="card">
-                            <h3>System Status</h3>
-                            <div class="status-indicator online">Online</div>
+                <div id="overview" class="page-content active">
+                    <h2>System Overview</h2>
+                    <div class="system-diagram">
+                        <div class="satellite-constellation">
+                            <div class="satellite-info" data-sat="1">
+                                <h4>Satellite 1</h4>
+                                <div class="sat-status active">Active</div>
+                                <div class="elevation">El: <span id="sat1-elevation">45°</span></div>
+                            </div>
+                            <div class="satellite-info" data-sat="2">
+                                <h4>Satellite 2</h4>
+                                <div class="sat-status active">Active</div>
+                                <div class="elevation">El: <span id="sat2-elevation">67°</span></div>
+                            </div>
+                            <div class="satellite-info" data-sat="3">
+                                <h4>Satellite 3</h4>
+                                <div class="sat-status standby">Standby</div>
+                                <div class="elevation">El: <span id="sat3-elevation">22°</span></div>
+                            </div>
+                            <div class="satellite-info" data-sat="4">
+                                <h4>Satellite 4</h4>
+                                <div class="sat-status inactive">Out of Range</div>
+                                <div class="elevation">El: <span id="sat4-elevation">15°</span></div>
+                            </div>
                         </div>
-                        <div class="card">
-                            <h3>Active Connections</h3>
-                            <div class="metric">12 satellites</div>
-                        </div>
-                        <div class="card">
-                            <h3>Data Throughput</h3>
-                            <div class="metric">1.2 Gbps</div>
+                        
+                        <div class="ground-assets">
+                            <div class="asset-info">
+                                <h4>Ground Station</h4>
+                                <div class="location">Northern Taiwan (25.0330°N, 121.5654°E)</div>
+                                <div class="status online">Online</div>
+                            </div>
+                            <div class="asset-info">
+                                <h4>Handheld Device</h4>
+                                <div class="location">Northern Taiwan (25.0320°N, 121.5644°E)</div>
+                                <div class="status online">Connected</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="satellite-config" class="page-content">
                     <h2>Satellite Configuration</h2>
-                    <div class="config-form">
-                        <div class="form-group">
-                            <label for="orbital-params">Orbital Parameters:</label>
-                            <textarea id="orbital-params" placeholder="Enter orbital parameters..."></textarea>
+                    <div class="satellite-grid">
+                        <div class="satellite-card" data-sat="1">
+                            <h3>Satellite 1</h3>
+                            <div class="config-details">
+                                <div class="detail-item">
+                                    <span class="label">Altitude:</span>
+                                    <span class="value" id="sat1-altitude">600 km</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Current Position:</span>
+                                    <span class="value" id="sat1-position">45.2°N, 121.8°E</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Velocity:</span>
+                                    <span class="value" id="sat1-velocity">7.56 km/s</span>
+                                </div>
+                            </div>
+                            <button class="detail-btn" onclick="openDetailPage('satellite', 1)">View Details</button>
                         </div>
-                        <div class="form-group">
-                            <label for="antenna-config">Antenna Configuration:</label>
-                            <select id="antenna-config">
-                                <option value="phased-array">Phased Array</option>
-                                <option value="parabolic">Parabolic</option>
-                                <option value="horn">Horn Antenna</option>
-                            </select>
+                        <div class="satellite-card" data-sat="2">
+                            <h3>Satellite 2</h3>
+                            <div class="config-details">
+                                <div class="detail-item">
+                                    <span class="label">Altitude:</span>
+                                    <span class="value" id="sat2-altitude">600 km</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Current Position:</span>
+                                    <span class="value" id="sat2-position">47.1°N, 119.2°E</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Velocity:</span>
+                                    <span class="value" id="sat2-velocity">7.56 km/s</span>
+                                </div>
+                            </div>
+                            <button class="detail-btn" onclick="openDetailPage('satellite', 2)">View Details</button>
+                        </div>
+                        <div class="satellite-card" data-sat="3">
+                            <h3>Satellite 3</h3>
+                            <div class="config-details">
+                                <div class="detail-item">
+                                    <span class="label">Altitude:</span>
+                                    <span class="value" id="sat3-altitude">600 km</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Current Position:</span>
+                                    <span class="value" id="sat3-position">42.8°N, 124.1°E</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Velocity:</span>
+                                    <span class="value" id="sat3-velocity">7.56 km/s</span>
+                                </div>
+                            </div>
+                            <button class="detail-btn" onclick="openDetailPage('satellite', 3)">View Details</button>
+                        </div>
+                        <div class="satellite-card" data-sat="4">
+                            <h3>Satellite 4</h3>
+                            <div class="config-details">
+                                <div class="detail-item">
+                                    <span class="label">Altitude:</span>
+                                    <span class="value" id="sat4-altitude">600 km</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Current Position:</span>
+                                    <span class="value" id="sat4-position">39.5°N, 126.8°E</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Velocity:</span>
+                                    <span class="value" id="sat4-velocity">7.56 km/s</span>
+                                </div>
+                            </div>
+                            <button class="detail-btn" onclick="openDetailPage('satellite', 4)">View Details</button>
                         </div>
                     </div>
                 </div>
 
-                <div id="network-analysis" class="page-content">
-                    <h2>Network Analysis</h2>
-                    <div class="analysis-tools">
-                        <div class="tool-section">
-                            <h3>Signal Quality</h3>
+                <div id="trajectory" class="page-content">
+                    <h2>Trajectory Analysis</h2>
+                    <div class="trajectory-container">
+                        <div class="trajectory-chart">
+                            <canvas id="trajectory-canvas" width="600" height="400"></canvas>
+                        </div>
+                        <div class="trajectory-controls">
+                            <h3>Trajectory Simulation</h3>
+                            <div class="control-group">
+                                <label for="simulation-speed">Simulation Speed:</label>
+                                <input type="range" id="simulation-speed" min="1" max="10" value="1">
+                                <span class="speed-value">1x</span>
+                            </div>
+                            <div class="control-group">
+                                <button id="play-simulation" class="control-btn">Play</button>
+                                <button id="pause-simulation" class="control-btn">Pause</button>
+                                <button id="reset-simulation" class="control-btn">Reset</button>
+                            </div>
+                            <button class="detail-btn" onclick="openDetailPage('trajectory')">View Detailed Trajectory</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="coverage" class="page-content">
+                    <h2>Coverage Analysis</h2>
+                    <div class="coverage-container">
+                        <div class="coverage-map">
+                            <canvas id="coverage-canvas" width="600" height="400"></canvas>
+                        </div>
+                        <div class="coverage-metrics">
+                            <h3>Coverage Metrics</h3>
+                            <div class="metric-item">
+                                <span class="metric-label">Total Coverage Area:</span>
+                                <span class="metric-value" id="total-coverage">2,847 km²</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Overlap Regions:</span>
+                                <span class="metric-value" id="overlap-regions">15%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Coverage Efficiency:</span>
+                                <span class="metric-value" id="coverage-efficiency">87%</span>
+                            </div>
+                            <button class="detail-btn" onclick="openDetailPage('coverage')">View Coverage Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="performance" class="page-content">
+                    <h2>Performance Metrics</h2>
+                    <div class="performance-grid">
+                        <div class="performance-card">
+                            <h3>Link Quality</h3>
                             <div class="metric-display">
                                 <span class="metric-label">SNR:</span>
-                                <span class="metric-value">25.3 dB</span>
+                                <span class="metric-value" id="current-snr">23.5 dB</span>
                             </div>
                             <div class="metric-display">
                                 <span class="metric-label">RSRP:</span>
-                                <span class="metric-value">-85 dBm</span>
+                                <span class="metric-value" id="current-rsrp">-89 dBm</span>
+                            </div>
+                            <div class="metric-display">
+                                <span class="metric-label">Throughput:</span>
+                                <span class="metric-value" id="current-throughput">45.2 Mbps</span>
                             </div>
                         </div>
-                        <div class="tool-section">
-                            <h3>Coverage Analysis</h3>
-                            <canvas id="coverage-map" width="400" height="300"></canvas>
+                        <div class="performance-card">
+                            <h3>Handover Statistics</h3>
+                            <div class="metric-display">
+                                <span class="metric-label">Success Rate:</span>
+                                <span class="metric-value" id="handover-success">96.8%</span>
+                            </div>
+                            <div class="metric-display">
+                                <span class="metric-label">Avg. Duration:</span>
+                                <span class="metric-value" id="handover-duration">127 ms</span>
+                            </div>
+                            <div class="metric-display">
+                                <span class="metric-label">Total Handovers:</span>
+                                <span class="metric-value" id="total-handovers">1,247</span>
+                            </div>
+                        </div>
+                        <div class="performance-card full-width">
+                            <h3>Real-time Performance Chart</h3>
+                            <canvas id="performance-chart" width="800" height="200"></canvas>
                         </div>
                     </div>
-                </div>
-
-                <div id="monitoring" class="page-content">
-                    <h2>Real-time Monitoring</h2>
-                    <div class="monitoring-panel">
-                        <div class="chart-container">
-                            <canvas id="latency-chart" width="500" height="200"></canvas>
-                        </div>
-                        <div class="alerts-panel">
-                            <h3>System Alerts</h3>
-                            <div class="alert-item info">
-                                <span class="alert-time">10:15:23</span>
-                                <span class="alert-msg">Satellite SAT-001 handover completed</span>
-                            </div>
-                            <div class="alert-item warning">
-                                <span class="alert-time">10:12:15</span>
-                                <span class="alert-msg">Signal strength below threshold on Beam-3</span>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="detail-btn" onclick="openDetailPage('performance')">View Performance Details</button>
                 </div>
             </div>
         </main>
