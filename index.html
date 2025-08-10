@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NR-NTN Satellite Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>NR-NTN Satellite Communication Tool</h1>
+            <nav class="main-nav">
+                <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+                <button class="nav-btn" data-page="satellite-config">Satellite Config</button>
+                <button class="nav-btn" data-page="network-analysis">Network Analysis</button>
+                <button class="nav-btn" data-page="monitoring">Monitoring</button>
+            </nav>
+        </header>
+
+        <main>
+            <div class="parameter-panel">
+                <h3>Shared Parameters</h3>
+                <div class="param-group">
+                    <label for="satellite-id">Satellite ID:</label>
+                    <input type="text" id="satellite-id" name="satellite-id" placeholder="Enter satellite ID">
+                </div>
+                <div class="param-group">
+                    <label for="frequency">Frequency (MHz):</label>
+                    <input type="number" id="frequency" name="frequency" placeholder="2000">
+                </div>
+                <div class="param-group">
+                    <label for="beam-id">Beam ID:</label>
+                    <input type="text" id="beam-id" name="beam-id" placeholder="Enter beam ID">
+                </div>
+                <div class="param-group">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" placeholder="Lat, Lon">
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div id="dashboard" class="page-content active">
+                    <h2>Dashboard</h2>
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h3>System Status</h3>
+                            <div class="status-indicator online">Online</div>
+                        </div>
+                        <div class="card">
+                            <h3>Active Connections</h3>
+                            <div class="metric">12 satellites</div>
+                        </div>
+                        <div class="card">
+                            <h3>Data Throughput</h3>
+                            <div class="metric">1.2 Gbps</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="satellite-config" class="page-content">
+                    <h2>Satellite Configuration</h2>
+                    <div class="config-form">
+                        <div class="form-group">
+                            <label for="orbital-params">Orbital Parameters:</label>
+                            <textarea id="orbital-params" placeholder="Enter orbital parameters..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="antenna-config">Antenna Configuration:</label>
+                            <select id="antenna-config">
+                                <option value="phased-array">Phased Array</option>
+                                <option value="parabolic">Parabolic</option>
+                                <option value="horn">Horn Antenna</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="network-analysis" class="page-content">
+                    <h2>Network Analysis</h2>
+                    <div class="analysis-tools">
+                        <div class="tool-section">
+                            <h3>Signal Quality</h3>
+                            <div class="metric-display">
+                                <span class="metric-label">SNR:</span>
+                                <span class="metric-value">25.3 dB</span>
+                            </div>
+                            <div class="metric-display">
+                                <span class="metric-label">RSRP:</span>
+                                <span class="metric-value">-85 dBm</span>
+                            </div>
+                        </div>
+                        <div class="tool-section">
+                            <h3>Coverage Analysis</h3>
+                            <canvas id="coverage-map" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="monitoring" class="page-content">
+                    <h2>Real-time Monitoring</h2>
+                    <div class="monitoring-panel">
+                        <div class="chart-container">
+                            <canvas id="latency-chart" width="500" height="200"></canvas>
+                        </div>
+                        <div class="alerts-panel">
+                            <h3>System Alerts</h3>
+                            <div class="alert-item info">
+                                <span class="alert-time">10:15:23</span>
+                                <span class="alert-msg">Satellite SAT-001 handover completed</span>
+                            </div>
+                            <div class="alert-item warning">
+                                <span class="alert-time">10:12:15</span>
+                                <span class="alert-msg">Signal strength below threshold on Beam-3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
