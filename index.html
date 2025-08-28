@@ -48,16 +48,26 @@
                 </div>
 
                 <div class="param-section">
-                    <h4>Trajectory Parameters</h4>
+                    <h4>Satellite Position Configuration</h4>
                     <div class="param-group">
-                        <label for="start-elevation">Start Elevation (°):</label>
-                        <input type="range" id="start-elevation" name="start-elevation" min="20" max="160" value="30" step="1">
-                        <span class="range-value">30°</span>
+                        <label for="initial-elevation">Initial Elevation Angle (°):</label>
+                        <input type="range" id="initial-elevation" name="initial-elevation" min="10" max="170" value="45" step="1">
+                        <span class="range-value">45°</span>
+                        <div class="range-indicators">
+                            <div class="range-bar">
+                                <span class="range-zone ground-station" title="Ground Station Range: 10-170°">GS: 10-170°</span>
+                                <span class="range-zone handheld-device" title="Handheld Device Range: 25-155°">HH: 25-155°</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="param-group">
-                        <label for="max-elevation">Max Elevation (°):</label>
-                        <input type="range" id="max-elevation" name="max-elevation" min="20" max="160" value="90" step="1">
+                        <label for="max-elevation">Maximum Elevation (°):</label>
+                        <input type="range" id="max-elevation" name="max-elevation" min="10" max="170" value="90" step="1">
                         <span class="range-value">90°</span>
+                    </div>
+                    <div class="coverage-status">
+                        <div class="status-indicator ground-station-status" id="gs-status">Ground Station: <span class="status-text">In Range</span></div>
+                        <div class="status-indicator handheld-status" id="hh-status">Handheld Device: <span class="status-text">In Range</span></div>
                     </div>
                 </div>
 
@@ -130,78 +140,198 @@
 
                 <div id="satellite-config" class="page-content">
                     <h2>Satellite Configuration</h2>
-                    <div class="satellite-grid">
-                        <div class="satellite-card" data-sat="1">
-                            <h3>Satellite 1</h3>
-                            <div class="config-details">
-                                <div class="detail-item">
-                                    <span class="label">Altitude:</span>
-                                    <span class="value" id="sat1-altitude">600 km</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="label">Current Position:</span>
-                                    <span class="value" id="sat1-position">45.2°N, 121.8°E</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="label">Velocity:</span>
-                                    <span class="value" id="sat1-velocity">7.56 km/s</span>
-                                </div>
+                    
+                    <!-- Interactive Positioning Map -->
+                    <div class="positioning-map-section">
+                        <h3>Interactive Satellite Positioning</h3>
+                        <div class="positioning-controls">
+                            <div class="control-header">
+                                <label for="satellite-selector">Select Satellite to Position:</label>
+                                <select id="satellite-selector" name="satellite-selector">
+                                    <option value="1">Satellite 1 (Red)</option>
+                                    <option value="2">Satellite 2 (Teal)</option>
+                                    <option value="3">Satellite 3 (Blue)</option>
+                                    <option value="4">Satellite 4 (Green)</option>
+                                </select>
                             </div>
-                            <button class="detail-btn" onclick="openDetailPage('satellite', 1)">View Details</button>
+                            <p class="instruction-text">Click on the map to position the selected satellite. Ground Station (GS) and Handheld (HH) are at the center.</p>
                         </div>
-                        <div class="satellite-card" data-sat="2">
-                            <h3>Satellite 2</h3>
-                            <div class="config-details">
-                                <div class="detail-item">
-                                    <span class="label">Altitude:</span>
-                                    <span class="value" id="sat2-altitude">600 km</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="label">Current Position:</span>
-                                    <span class="value" id="sat2-position">47.1°N, 119.2°E</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="label">Velocity:</span>
-                                    <span class="value" id="sat2-velocity">7.56 km/s</span>
+                        
+                        <div class="positioning-map-container">
+                            <div class="map-wrapper">
+                                <canvas id="positioning-canvas" width="800" height="600"></canvas>
+                                <div class="map-labels">
+                                    <div class="direction-label north">NORTH</div>
+                                    <div class="direction-label south">SOUTH</div>
+                                    <div class="direction-label east">EAST</div>
+                                    <div class="direction-label west">WEST</div>
                                 </div>
                             </div>
-                            <button class="detail-btn" onclick="openDetailPage('satellite', 2)">View Details</button>
+                            <div class="position-info-panel">
+                                <h4>Position Information</h4>
+                                <div class="info-item">
+                                    <span class="info-label">Selected Satellite:</span>
+                                    <span class="info-value" id="selected-sat-info">Satellite 1</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Position:</span>
+                                    <span class="info-value" id="selected-sat-position">Click to set</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Direction from GS:</span>
+                                    <span class="info-value" id="selected-sat-direction">--</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Distance:</span>
+                                    <span class="info-value" id="selected-sat-distance">--</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="satellite-card" data-sat="3">
-                            <h3>Satellite 3</h3>
-                            <div class="config-details">
-                                <div class="detail-item">
-                                    <span class="label">Altitude:</span>
-                                    <span class="value" id="sat3-altitude">600 km</span>
+                    </div>
+                    
+                    <!-- Individual Satellite Controls -->
+                    <div class="satellite-controls-section">
+                        <h3>Individual Satellite Configuration</h3>
+                        <p class="section-description">Configure each satellite's elevation angle and position relative to the ground station in Northern Taiwan.</p>
+                        
+                        <div class="satellite-controls-grid">
+                            <div class="satellite-control" data-sat="1">
+                                <h4>Satellite 1 <span class="sat-indicator" style="color: #ff6b6b;">●</span></h4>
+                                <div class="control-group">
+                                    <label for="sat1-elevation-slider">Initial Elevation Angle:</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="sat1-elevation-slider" name="sat1-elevation-slider" 
+                                               min="10" max="170" value="45" step="1">
+                                        <span class="slider-value" id="sat1-elevation-value">45°</span>
+                                    </div>
+                                    <div class="coverage-indicators">
+                                        <span class="coverage-indicator gs-indicator" id="sat1-gs-indicator">Ground Station: In Range</span>
+                                        <span class="coverage-indicator hh-indicator" id="sat1-hh-indicator">Handheld: In Range</span>
+                                    </div>
                                 </div>
-                                <div class="detail-item">
-                                    <span class="label">Current Position:</span>
-                                    <span class="value" id="sat3-position">42.8°N, 124.1°E</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="label">Velocity:</span>
-                                    <span class="value" id="sat3-velocity">7.56 km/s</span>
+                                <div class="satellite-status" id="sat1-status">
+                                    <div class="status-row">
+                                        <span class="label">Status:</span>
+                                        <span class="value status-active" id="sat1-status-text">Active</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span class="label">Position:</span>
+                                        <span class="value" id="sat1-position">Auto-calculated</span>
+                                    </div>
                                 </div>
                             </div>
-                            <button class="detail-btn" onclick="openDetailPage('satellite', 3)">View Details</button>
+
+                            <div class="satellite-control" data-sat="2">
+                                <h4>Satellite 2 <span class="sat-indicator" style="color: #4ecdc4;">●</span></h4>
+                                <div class="control-group">
+                                    <label for="sat2-elevation-slider">Initial Elevation Angle:</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="sat2-elevation-slider" name="sat2-elevation-slider" 
+                                               min="10" max="170" value="67" step="1">
+                                        <span class="slider-value" id="sat2-elevation-value">67°</span>
+                                    </div>
+                                    <div class="coverage-indicators">
+                                        <span class="coverage-indicator gs-indicator" id="sat2-gs-indicator">Ground Station: In Range</span>
+                                        <span class="coverage-indicator hh-indicator" id="sat2-hh-indicator">Handheld: In Range</span>
+                                    </div>
+                                </div>
+                                <div class="satellite-status" id="sat2-status">
+                                    <div class="status-row">
+                                        <span class="label">Status:</span>
+                                        <span class="value status-active" id="sat2-status-text">Active</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span class="label">Position:</span>
+                                        <span class="value" id="sat2-position">Auto-calculated</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="satellite-control" data-sat="3">
+                                <h4>Satellite 3 <span class="sat-indicator" style="color: #45b7d1;">●</span></h4>
+                                <div class="control-group">
+                                    <label for="sat3-elevation-slider">Initial Elevation Angle:</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="sat3-elevation-slider" name="sat3-elevation-slider" 
+                                               min="10" max="170" value="22" step="1">
+                                        <span class="slider-value" id="sat3-elevation-value">22°</span>
+                                    </div>
+                                    <div class="coverage-indicators">
+                                        <span class="coverage-indicator gs-indicator" id="sat3-gs-indicator">Ground Station: In Range</span>
+                                        <span class="coverage-indicator hh-indicator" id="sat3-hh-indicator">Handheld: Out of Range</span>
+                                    </div>
+                                </div>
+                                <div class="satellite-status" id="sat3-status">
+                                    <div class="status-row">
+                                        <span class="label">Status:</span>
+                                        <span class="value status-standby" id="sat3-status-text">GS Only</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span class="label">Position:</span>
+                                        <span class="value" id="sat3-position">Auto-calculated</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="satellite-control" data-sat="4">
+                                <h4>Satellite 4 <span class="sat-indicator" style="color: #96ceb4;">●</span></h4>
+                                <div class="control-group">
+                                    <label for="sat4-elevation-slider">Initial Elevation Angle:</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="sat4-elevation-slider" name="sat4-elevation-slider" 
+                                               min="10" max="170" value="15" step="1">
+                                        <span class="slider-value" id="sat4-elevation-value">15°</span>
+                                    </div>
+                                    <div class="coverage-indicators">
+                                        <span class="coverage-indicator gs-indicator" id="sat4-gs-indicator">Ground Station: In Range</span>
+                                        <span class="coverage-indicator hh-indicator" id="sat4-hh-indicator">Handheld: Out of Range</span>
+                                    </div>
+                                </div>
+                                <div class="satellite-status" id="sat4-status">
+                                    <div class="status-row">
+                                        <span class="label">Status:</span>
+                                        <span class="value status-standby" id="sat4-status-text">GS Only</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span class="label">Position:</span>
+                                        <span class="value" id="sat4-position">Auto-calculated</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="satellite-card" data-sat="4">
-                            <h3>Satellite 4</h3>
-                            <div class="config-details">
-                                <div class="detail-item">
-                                    <span class="label">Altitude:</span>
-                                    <span class="value" id="sat4-altitude">600 km</span>
+                    </div>
+
+                    <!-- Visual Overview -->
+                    <div class="configuration-overview">
+                        <h3>Configuration Overview</h3>
+                        <div class="overview-content">
+                            <div class="coverage-summary">
+                                <div class="summary-item">
+                                    <span class="summary-label">Ground Station Coverage:</span>
+                                    <span class="summary-value" id="total-gs-coverage">4/4 satellites</span>
                                 </div>
-                                <div class="detail-item">
-                                    <span class="label">Current Position:</span>
-                                    <span class="value" id="sat4-position">39.5°N, 126.8°E</span>
+                                <div class="summary-item">
+                                    <span class="summary-label">Handheld Coverage:</span>
+                                    <span class="summary-value" id="total-hh-coverage">2/4 satellites</span>
                                 </div>
-                                <div class="detail-item">
-                                    <span class="label">Velocity:</span>
-                                    <span class="value" id="sat4-velocity">7.56 km/s</span>
+                                <div class="summary-item">
+                                    <span class="summary-label">Optimal Range (25-155°):</span>
+                                    <span class="summary-value" id="optimal-range-count">2/4 satellites</span>
                                 </div>
                             </div>
-                            <button class="detail-btn" onclick="openDetailPage('satellite', 4)">View Details</button>
+                            <div class="range-reference">
+                                <h4>Coverage Reference</h4>
+                                <div class="range-info">
+                                    <div class="range-item">
+                                        <span class="range-color" style="background: #1976d2;"></span>
+                                        <span class="range-text">Ground Station: 10-170°</span>
+                                    </div>
+                                    <div class="range-item">
+                                        <span class="range-color" style="background: #388e3c;"></span>
+                                        <span class="range-text">Handheld Device: 25-155°</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
