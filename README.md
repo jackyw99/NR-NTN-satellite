@@ -8,3 +8,4 @@ The ground station and the handheld are assume stationary and nearby in Northern
 The system computes following using different separated html files each like provide some more detail information.
 The main html allow to distribute information to individual html.
 We would like to create such framework as the initial issue.
+

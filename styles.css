@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1550px;
     margin: 0 auto;
     background: white;
     min-height: 100vh;
@@ -74,7 +74,7 @@ main {
 }
 
 .parameter-panel {
-    width: 280px;
+    width: 320px;
     background: #f8f9fa;
     padding: 1.5rem;
     border-right: 1px solid #e0e0e0;
@@ -609,6 +609,595 @@ canvas {
 
 .alert-msg {
     flex: 1;
+}
+
+/* Elevation angle configuration styles */
+.range-indicators {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.range-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.range-zone {
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.range-zone.ground-station {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+}
+
+.range-zone.handheld-device {
+    background: #e8f5e8;
+    color: #388e3c;
+    border: 1px solid #388e3c;
+}
+
+.coverage-status {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.status-indicator {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-indicator:last-child {
+    margin-bottom: 0;
+}
+
+.status-indicator.in-range .status-text {
+    color: #2e7d32;
+}
+
+.status-indicator.out-of-range .status-text {
+    color: #c62828;
+}
+
+.ground-station-status {
+    color: #1976d2;
+}
+
+.handheld-status {
+    color: #388e3c;
+}
+
+/* Interactive positioning map styles */
+.positioning-map-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.positioning-map-section h3 {
+    margin-bottom: 1rem;
+    color: #1e3c72;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.positioning-controls {
+    margin-bottom: 1.5rem;
+}
+
+.control-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.control-header label {
+    font-weight: 600;
+    color: #555;
+}
+
+.control-header select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.positioning-map-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    align-items: start;
+}
+
+.map-wrapper {
+    position: relative;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+    border: 3px solid #2a5298;
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: crosshair;
+}
+
+.map-wrapper canvas {
+    display: block;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.map-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.direction-label {
+    position: absolute;
+    font-weight: bold;
+    color: #1e3c72;
+    font-size: 0.9rem;
+    background: rgba(255,255,255,0.9);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid #2a5298;
+}
+
+.direction-label.north {
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.direction-label.south {
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.direction-label.east {
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.direction-label.west {
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.position-info-panel {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: fit-content;
+}
+
+.position-info-panel h4 {
+    margin-bottom: 1rem;
+    color: #1e3c72;
+    font-size: 1rem;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.85rem;
+}
+
+.info-value {
+    font-weight: 500;
+    color: #2a5298;
+    font-size: 0.85rem;
+}
+
+/* Simplified satellite configuration styles */
+.satellite-controls-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.satellite-controls-section h3 {
+    margin-bottom: 0.5rem;
+    color: #1e3c72;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.section-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.configuration-overview {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.configuration-overview h3 {
+    margin-bottom: 1.5rem;
+    color: #1e3c72;
+    font-size: 1.1rem;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+.map-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.map-controls label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.map-controls select {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.instruction-text {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+.satellite-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 1400px) {
+    .satellite-controls-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .satellite-controls-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.satellite-control {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.satellite-control:hover {
+    border-color: #2a5298;
+    box-shadow: 0 2px 8px rgba(42, 82, 152, 0.1);
+}
+
+.satellite-control h4 {
+    margin-bottom: 1rem;
+    color: #1e3c72;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+.satellite-control .sat-indicator {
+    font-size: 1.3rem;
+    margin-left: 0.5rem;
+}
+
+.position-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.coord-display,
+.trajectory-info,
+.elevation-display {
+    text-align: center;
+}
+
+.coord-label,
+.trajectory-label,
+.elevation-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.2rem;
+}
+
+#selected-coords,
+#gs-coverage-info,
+#current-elevation {
+    font-weight: 600;
+    color: #2a5298;
+    font-size: 0.9rem;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.slider-container input[type="range"] {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #ddd;
+    outline: none;
+    transition: background 0.3s ease;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2a5298;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.slider-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2a5298;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.slider-value {
+    font-weight: 600;
+    color: #2a5298;
+    font-size: 1rem;
+    min-width: 40px;
+    text-align: center;
+}
+
+.coverage-indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.coverage-indicator {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.gs-indicator {
+    color: #1976d2;
+    background: rgba(25, 118, 210, 0.1);
+}
+
+.hh-indicator {
+    color: #388e3c;
+    background: rgba(56, 142, 60, 0.1);
+}
+
+.coverage-indicator.out-of-range {
+    color: #c62828 !important;
+    background: rgba(198, 40, 40, 0.1) !important;
+}
+
+.satellite-status {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.status-row:last-child {
+    margin-bottom: 0;
+}
+
+.status-row .label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.status-row .value {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.status-active {
+    color: #2e7d32 !important;
+}
+
+.status-standby {
+    color: #ef6c00 !important;
+}
+
+.status-inactive {
+    color: #c62828 !important;
+}
+
+.overview-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+.coverage-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.summary-value {
+    font-weight: bold;
+    color: #2a5298;
+}
+
+.range-reference {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+}
+
+.range-reference h4 {
+    margin-bottom: 1rem;
+    color: #1e3c72;
+    font-size: 1rem;
+}
+
+.range-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.range-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.range-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.range-text {
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.sat-indicator {
+    font-size: 1.2rem;
+    margin-left: 0.5rem;
+}
+
+.satellite-card[data-sat="1"] .sat-indicator {
+    color: #ff6b6b;
+}
+
+.satellite-card[data-sat="2"] .sat-indicator {
+    color: #4ecdc4;
+}
+
+.satellite-card[data-sat="3"] .sat-indicator {
+    color: #45b7d1;
+}
+
+.satellite-card[data-sat="4"] .sat-indicator {
+    color: #96ceb4;
+}
+
+.satellite-card.selected {
+    border-color: #2a5298;
+    box-shadow: 0 0 0 2px rgba(42, 82, 152, 0.2);
 }
 
 @media (max-width: 768px) {
