@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Analysis - NR-NTN Satellite System</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .detail-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .back-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+        .analysis-sections {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-nav">← Back to Main</a>
+    
+    <div class="detail-header">
+        <h1>Detailed System Analysis</h1>
+        <p id="analysis-params">Loading system parameters...</p>
+    </div>
+
+    <div class="analysis-sections">
+        <div class="section">
+            <h2>Satellite Constellation Details</h2>
+            <div id="constellation-details">
+                <div class="satellite-detailed" data-sat="1">
+                    <h3>Satellite 1 - Primary</h3>
+                    <div class="detailed-metrics">
+                        <div class="metric-row">
+                            <span>Orbital Period:</span><span id="sat1-period">95.6 minutes</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Inclination:</span><span id="sat1-inclination">53.0°</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Apogee/Perigee:</span><span id="sat1-orbit">600km/600km</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Ground Track:</span><span id="sat1-track">Ascending Pass</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Link Budget Analysis</h2>
+            <div class="link-budget">
+                <h3>Uplink (Handheld → Satellite)</h3>
+                <table class="budget-table">
+                    <tr><td>Transmit Power</td><td id="ul-tx-power">23 dBm</td></tr>
+                    <tr><td>Path Loss</td><td id="ul-path-loss">-162.3 dB</td></tr>
+                    <tr><td>Atmospheric Loss</td><td id="ul-atmo-loss">-2.1 dB</td></tr>
+                    <tr><td>Receive Sensitivity</td><td id="ul-rx-sens">-110 dBm</td></tr>
+                    <tr><td>Link Margin</td><td id="ul-margin">8.2 dB</td></tr>
+                </table>
+
+                <h3>Downlink (Satellite → Ground Station)</h3>
+                <table class="budget-table">
+                    <tr><td>Transmit Power</td><td id="dl-tx-power">35 dBm</td></tr>
+                    <tr><td>Path Loss</td><td id="dl-path-loss">-162.3 dB</td></tr>
+                    <tr><td>Atmospheric Loss</td><td id="dl-atmo-loss">-2.1 dB</td></tr>
+                    <tr><td>Receive Sensitivity</td><td id="dl-rx-sens">-120 dBm</td></tr>
+                    <tr><td>Link Margin</td><td id="dl-margin">15.4 dB</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Handover Analysis</h2>
+            <div class="handover-analysis">
+                <canvas id="handover-timeline" width="800" height="300"></canvas>
+                <div class="handover-stats">
+                    <h3>Handover Statistics</h3>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Predicted Handovers (Next Hour):</span>
+                            <span class="stat-value" id="predicted-handovers">4</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Average Service Time per Satellite:</span>
+                            <span class="stat-value" id="avg-service-time">8.5 minutes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Minimum Elevation Handover:</span>
+                            <span class="stat-value" id="min-elevation-ho">25°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Coverage Heat Map</h2>
+            <div class="coverage-heatmap">
+                <canvas id="coverage-heatmap" width="800" height="500"></canvas>
+                <div class="heatmap-legend">
+                    <h4>Signal Strength (dBm)</h4>
+                    <div class="legend-scale">
+                        <span class="legend-item" style="background: #ff0000">-120</span>
+                        <span class="legend-item" style="background: #ff8800">-100</span>
+                        <span class="legend-item" style="background: #ffff00">-80</span>
+                        <span class="legend-item" style="background: #88ff00">-60</span>
+                        <span class="legend-item" style="background: #00ff00">-40</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get parameters from URL or parent window
+        function loadSystemParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramDisplay = document.getElementById('analysis-params');
+            
+            const params = {
+                satellites: urlParams.get('num-satellites') || '4',
+                altitude: urlParams.get('altitude-model') || 'LE600',
+                frequency: urlParams.get('frequency') || '2100',
+                startElevation: urlParams.get('start-elevation') || '30'
+            };
+            
+            paramDisplay.textContent = `Configuration: ${params.satellites} satellites, ${params.altitude}, ${params.frequency}MHz, Start elevation: ${params.startElevation}°`;
+            
+            updateAnalysisWithParameters(params);
+        }
+
+        function updateAnalysisWithParameters(params) {
+            // Update satellite details based on altitude model
+            const altitudes = {
+                'LE350': 350,
+                'LE600': 600,
+                'LEO1200': 1200,
+                'GEO': 35786
+            };
+            
+            const altitude = altitudes[params.altitude];
+            const period = altitude < 2000 ? (90 + altitude/100).toFixed(1) : 1436; // GEO period
+            
+            // Update orbital parameters
+            document.getElementById('sat1-period').textContent = `${period} minutes`;
+            document.getElementById('sat1-orbit').textContent = `${altitude}km/${altitude}km`;
+            
+            // Update link budget based on altitude
+            const pathLoss = 20 * Math.log10(4 * Math.PI * altitude * 1000 * params.frequency * 1e6 / 3e8);
+            document.getElementById('ul-path-loss').textContent = `-${pathLoss.toFixed(1)} dB`;
+            document.getElementById('dl-path-loss').textContent = `-${pathLoss.toFixed(1)} dB`;
+            
+            // Draw visualizations
+            drawHandoverTimeline();
+            drawCoverageHeatmap();
+        }
+
+        function drawHandoverTimeline() {
+            const canvas = document.getElementById('handover-timeline');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw timeline
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, canvas.height - 50);
+            ctx.lineTo(canvas.width - 50, canvas.height - 50);
+            ctx.stroke();
+            
+            // Draw handover events
+            const handovers = [
+                { time: 15, satellite: 'SAT-2', elevation: '25°' },
+                { time: 35, satellite: 'SAT-3', elevation: '28°' },
+                { time: 52, satellite: 'SAT-1', elevation: '32°' },
+                { time: 75, satellite: 'SAT-4', elevation: '26°' }
+            ];
+            
+            handovers.forEach((ho, index) => {
+                const x = 50 + (ho.time / 60) * (canvas.width - 100);
+                
+                ctx.fillStyle = '#2a5298';
+                ctx.beginPath();
+                ctx.arc(x, canvas.height - 50, 8, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.fillText(`${ho.satellite}`, x - 20, canvas.height - 70);
+                ctx.fillText(`${ho.elevation}`, x - 15, canvas.height - 25);
+            });
+            
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '14px Arial';
+            ctx.fillText('Time (minutes)', canvas.width/2 - 50, canvas.height - 10);
+            ctx.fillText('0', 45, canvas.height - 30);
+            ctx.fillText('60', canvas.width - 60, canvas.height - 30);
+        }
+
+        function drawCoverageHeatmap() {
+            const canvas = document.getElementById('coverage-heatmap');
+            const ctx = canvas.getContext('2d');
+            
+            const imageData = ctx.createImageData(canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            // Generate coverage heatmap data
+            for (let y = 0; y < canvas.height; y++) {
+                for (let x = 0; x < canvas.width; x++) {
+                    const index = (y * canvas.width + x) * 4;
+                    
+                    // Simulate signal strength based on distance from center points
+                    const centers = [
+                        { x: canvas.width * 0.3, y: canvas.height * 0.4 },
+                        { x: canvas.width * 0.7, y: canvas.height * 0.3 },
+                        { x: canvas.width * 0.5, y: canvas.height * 0.7 }
+                    ];
+                    
+                    let maxSignal = 0;
+                    centers.forEach(center => {
+                        const dist = Math.sqrt((x - center.x) ** 2 + (y - center.y) ** 2);
+                        const signal = Math.max(0, 255 - dist * 1.5);
+                        maxSignal = Math.max(maxSignal, signal);
+                    });
+                    
+                    // Color based on signal strength
+                    if (maxSignal > 200) {
+                        data[index] = 0; data[index + 1] = 255; data[index + 2] = 0; // Green
+                    } else if (maxSignal > 150) {
+                        data[index] = 136; data[index + 1] = 255; data[index + 2] = 0; // Yellow-green
+                    } else if (maxSignal > 100) {
+                        data[index] = 255; data[index + 1] = 255; data[index + 2] = 0; // Yellow
+                    } else if (maxSignal > 50) {
+                        data[index] = 255; data[index + 1] = 136; data[index + 2] = 0; // Orange
+                    } else {
+                        data[index] = 255; data[index + 1] = 0; data[index + 2] = 0; // Red
+                    }
+                    data[index + 3] = maxSignal > 20 ? 180 : 0; // Alpha
+                }
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            
+            // Add Taiwan outline
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(canvas.width/2, canvas.height/2, 100, 150, 0, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#000';
+            ctx.font = '16px Arial';
+            ctx.fillText('Northern Taiwan', canvas.width/2 - 60, canvas.height/2 - 80);
+        }
+
+        // Load parameters when page loads
+        document.addEventListener('DOMContentLoaded', loadSystemParameters);
+    </script>
+</body>
+</html>
